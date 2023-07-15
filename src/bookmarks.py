@@ -130,7 +130,7 @@ def update_bookmark(id):
 
 @bookmarks.delete("/<int:id>")
 @jwt_required()
-def update_bookmark(id):
+def delete_bookmark(id):
   current_user_id = get_jwt_identity()
   bookmark = Bookmark.query.filter_by(user_id=current_user_id, id=id).first()
   
@@ -151,3 +151,23 @@ def update_bookmark(id):
   return jsonify({
     'message': 'Bookmark deleted successfully'
   }), 204
+
+
+@bookmarks.get("/stats")
+@jwt_required()
+def get_stats():
+  data = []
+  current_user_id = get_jwt_identity()
+  items = Bookmark.query.filter_by(user_id=current_user_id).all()
+  
+  for item in items:
+    new_link = {
+      'visits': item.visits,
+      'url': item.url,
+      'id': item.id,
+      'short_url': item.short_url
+    }
+    data.append(new_link)
+  return jsonify({
+    'data': data
+  }), 200

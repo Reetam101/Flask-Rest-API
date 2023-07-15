@@ -4,7 +4,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from src.constants.http_status_codes import HTTP_400_BAD_REQUEST, HTTP_409_CONFLICT, HTTP_201_CREATED
 import validators
 from .database import User, db
-
+from flasgger import swag_from
 from flask_jwt_extended import jwt_required, create_access_token, create_refresh_token, get_jwt_identity, set_access_cookies, set_refresh_cookies
 
 
@@ -46,6 +46,7 @@ def register():
   
 
 @auth.post("/login")
+@swag_from('./docs/auth/login.yaml')
 def login():
   email = request.json.get('email', '')
   password = request.json.get('password', '')
